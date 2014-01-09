@@ -12,7 +12,7 @@ import java.util.Arrays;
  */
 public class SignUtil {
 	// 与接口配置信息中的Token要一致
-	private static String token = "weixinCourse";
+	private static String token = "WeiXinTest";
 
 	/**
 	 * 验证签名
@@ -30,7 +30,9 @@ public class SignUtil {
 		for (int i = 0; i < arr.length; i++) {
 			content.append(arr[i]);
 		}
+		// SHA-1加密
 		MessageDigest md = null;
+		// tmpStr 为 SHA-1 加密后string
 		String tmpStr = null;
 
 		try {

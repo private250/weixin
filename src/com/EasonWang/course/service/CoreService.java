@@ -48,7 +48,7 @@ public class CoreService {
 			textMessage.setCreateTime(new Date().getTime());
 			textMessage.setMsgType(MessageUtil.RESP_MESSAGE_TYPE_TEXT);
 			textMessage.setFuncFlag(0);
-			respContent = "感谢您订阅[王子帅同学]个人官方微信公众账号，立即回复以下【】中代码开启您的App新旅程！\n------\n【MN】查看美女图文\n 【QC】查看汽车图文 \n 【Lx】与我取得联系";
+			respContent = "立即回复以下【】中代码开启您的App新旅程！\n------\n 【MN】查看美女图文\n 【QC】查看汽车图文 \n 【Lx】与我取得联系";
 							
 			// 文本消息
 			if (msgType.equals(MessageUtil.REQ_MESSAGE_TYPE_TEXT)) {
@@ -56,13 +56,13 @@ public class CoreService {
 				// 获取文本消息内容
 				String msgContent = requestMap.get("Content");
 				
-				// 回复文本消息
+				// 回复文本消息-联系
 				if("lx".equalsIgnoreCase(msgContent)){
 					respContent = "感谢您与我们取得联系。\n-----------\n 请将您的意见或建议发送到下面的邮箱中，我们会第一时间进行处理\n easonwzs@126.com";
 					textMessage.setContent(respContent);
 					respMessage = MessageUtil.textMessageToXml(textMessage);
 				}
-				// 回复图文消息
+				// 回复图文消息-美女
 				else if("MN".equalsIgnoreCase(msgContent)){
 					
 					NewsMessage newsMessage = new NewsMessage();
@@ -74,11 +74,35 @@ public class CoreService {
 					
 					// 向图文消息类添加item					
 					List<Article> items = new ArrayList<Article>();
-					Article article1 = new Article("长发美女", "测试描述", "http://d.hiphotos.baidu.com/image/w%3D2048/sign=5befa00b0bf79052ef1f403e38cbd6ca/c75c10385343fbf2c95a753bb27eca8065388fb0.jpg", "http://image.baidu.com/detail/index?from=1&pn=45&picture_id=9276115835&album_id=380323480&app_id=578130&sortlog=0&user_id=149095500&column=美女&tag=长发&sort=0#pn45&-1&id9276115835");
-					Article article2 = new Article("SD品牌", "测试描述", "http://www.ds.com.cn/media/imgs/cars/newds5/wallpaper/642x362/ds5_wallpaper5_thu_b.jpg", "http://www.ds.com.cn");
+					Article article1 = new Article("百度美女", "测试描述", "http://d.hiphotos.baidu.com/image/w%3D2048/sign=5befa00b0bf79052ef1f403e38cbd6ca/c75c10385343fbf2c95a753bb27eca8065388fb0.jpg", "http://image.baidu.com");
+					Article article2 = new Article("妹子图，嘿嘿!", "你懂得，嘿嘿！", "http://image.baidu.com/detail/index?from=1&pn=2&picture_id=9508963617&album_id=400064194&app_id=578130&sortlog=0&user_id=857224915&column=美女&tag=性感&sort=0#pn6&4&id9508948119", "http://meitoo.diandian.com");
+					
+					
 					
 					items.add(article1);
 					items.add(article2);
+					
+					newsMessage.setArticleCount(items.size());
+					newsMessage.setArticles(items);
+					respMessage = MessageUtil.newsMessageToXml(newsMessage);
+				}
+				// 回复图文消息-汽车
+				else if("QC".equalsIgnoreCase(msgContent)){
+					
+					NewsMessage newsMessage = new NewsMessage();
+					newsMessage.setToUserName(fromUserName);
+					newsMessage.setFromUserName(toUserName);
+					newsMessage.setCreateTime(new Date().getTime());
+					newsMessage.setMsgType(MessageUtil.RESP_MESSAGE_TYPE_NEWS);
+					newsMessage.setFuncFlag(1);
+					
+					// 向图文消息类添加item					
+					List<Article> items = new ArrayList<Article>();
+					Article article1 = new Article("DS品牌", "DS汽车", "http://www.ds.com.cn/media/imgs/cars/newds5/wallpaper/642x362/ds5_wallpaper5_thu_b.jpg", "http://www.ds.com.cn");
+//					Article article2 = new Article("梅赛德斯-奔驰", "汽车发明车", "http://image.baidu.com/detail/index?from=1&pn=2&picture_id=9508963617&album_id=400064194&app_id=578130&sortlog=0&user_id=857224915&column=美女&tag=性感&sort=0#pn6&4&id9508948119", "http://meitoo.diandian.com");
+					
+					items.add(article1);
+//					items.add(article2);
 					
 					newsMessage.setArticleCount(items.size());
 					newsMessage.setArticles(items);
@@ -114,7 +138,10 @@ public class CoreService {
 				String eventType = requestMap.get("Event");
 				// 订阅
 				if (eventType.equals(MessageUtil.EVENT_TYPE_SUBSCRIBE)) {
-					respContent = "谢谢您的关注！";
+					respContent = "感谢您订阅[王子帅同学]个人官方微信公众账号!\n";
+					respContent += "立即回复以下【】中代码开启您的App新旅程！\n------\n 【MN】查看美女图文\n 【QC】查看汽车图文 \n 【Lx】与我取得联系";
+					textMessage.setContent(respContent);
+					respMessage = MessageUtil.textMessageToXml(textMessage);
 				}
 				// 取消订阅
 				else if (eventType.equals(MessageUtil.EVENT_TYPE_UNSUBSCRIBE)) {
@@ -122,7 +149,7 @@ public class CoreService {
 				}
 				// 自定义菜单点击事件
 				else if (eventType.equals(MessageUtil.EVENT_TYPE_CLICK)) {
-					// TODO 自定义菜单权没有开放，暂不处理该类消息
+					// TODO 自定义菜单需要服务号才可以使用，此处不再配置
 				}
 			}
 			
